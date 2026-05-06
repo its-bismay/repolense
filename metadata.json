@@ -1,0 +1,6 @@
+{
+  "name": "RepoLens",
+  "description": "Interactive GitHub repository visualizer and AI-powered code explainer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["AI Analysis", "Force-Directed Graph", "Interactive File Tree"]
+}
