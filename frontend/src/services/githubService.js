@@ -1,9 +1,9 @@
-import { RepoStructure } from '../types';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 export const githubService = {
-  async getRepoStructure(url: string): Promise<RepoStructure> {
+  async getRepoStructure(url) {
     const { owner, repo } = this.parseUrl(url);
-    const response = await fetch(`/api/repo/structure?owner=${owner}&repo=${repo}`);
+    const response = await fetch(`${BACKEND_URL}/api/repo/structure?owner=${owner}&repo=${repo}`);
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Failed to fetch repo structure');
@@ -11,9 +11,9 @@ export const githubService = {
     return response.json();
   },
 
-  async getFileContent(url: string, path: string, branch: string): Promise<string> {
+  async getFileContent(url, path, branch) {
     const { owner, repo } = this.parseUrl(url);
-    const response = await fetch(`/api/repo/file?owner=${owner}&repo=${repo}&path=${path}&branch=${branch}`);
+    const response = await fetch(`${BACKEND_URL}/api/repo/file?owner=${owner}&repo=${repo}&path=${path}&branch=${branch}`);
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Failed to fetch file content');
@@ -22,7 +22,7 @@ export const githubService = {
     return data.content;
   },
 
-  parseUrl(url: string) {
+  parseUrl(url) {
     try {
       const parsedUrl = new URL(url);
       const parts = parsedUrl.pathname.split('/').filter(Boolean);

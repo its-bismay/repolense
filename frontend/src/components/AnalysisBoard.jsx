@@ -1,13 +1,8 @@
 import React from 'react';
-import { RepoAnalysis } from '../types';
 import { motion } from 'motion/react';
 import { Layout, Cpu, Box, FileText, Activity } from 'lucide-react';
 
-interface AnalysisBoardProps {
-  analysis: RepoAnalysis;
-}
-
-export const AnalysisBoard: React.FC<AnalysisBoardProps> = ({ analysis }) => {
+export const AnalysisBoard = ({ analysis }) => {
   const cards = [
     {
       title: 'Overview',

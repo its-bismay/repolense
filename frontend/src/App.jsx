@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { githubService } from './services/githubService';
 import { aiService } from './services/aiService';
-import { RepoStructure, RepoAnalysis } from './types';
 import { Graph } from './components/Graph';
 import { FileTree } from './components/FileTree';
 import { AnalysisBoard } from './components/AnalysisBoard';
@@ -12,13 +11,13 @@ import { motion, AnimatePresence } from 'motion/react';
 export default function App() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<RepoStructure | null>(null);
-  const [analysis, setAnalysis] = useState<RepoAnalysis | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedPath, setSelectedPath] = useState<string | undefined>();
-  const [activeTab, setActiveTab] = useState<'graph' | 'analysis'>('graph');
+  const [data, setData] = useState(null);
+  const [analysis, setAnalysis] = useState(null);
+  const [error, setError] = useState(null);
+  const [selectedPath, setSelectedPath] = useState();
+  const [activeTab, setActiveTab] = useState('graph');
 
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     if (!url) return;
     
@@ -35,7 +34,7 @@ export default function App() {
       
       const repoAnalysis = await aiService.analyzeRepo(owner, repo, structure.tree);
       setAnalysis(repoAnalysis);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -274,7 +273,7 @@ export default function App() {
   );
 }
 
-const Cpu = ({ className }: { className?: string }) => (
+const Cpu = ({ className }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width="24" height="24" 

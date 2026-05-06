@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { githubService } from '../services/githubService';
 import { aiService } from '../services/aiService';
-import { FileAnalysis } from '../types';
 import { Loader2, Zap, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '../lib/utils';
 
-interface FileDetailProps {
-  repoUrl: string;
-  path: string;
-  branch: string;
-}
-
-export const FileDetail: React.FC<FileDetailProps> = ({ repoUrl, path, branch }) => {
-  const [content, setContent] = useState<string | null>(null);
-  const [analysis, setAnalysis] = useState<FileAnalysis | null>(null);
+export const FileDetail = ({ repoUrl, path, branch }) => {
+  const [content, setContent] = useState(null);
+  const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function loadData() {
@@ -37,7 +30,7 @@ export const FileDetail: React.FC<FileDetailProps> = ({ repoUrl, path, branch })
           setAnalysis(fileAnalysis);
           sessionStorage.setItem(cacheKey, JSON.stringify(fileAnalysis));
         }
-      } catch (err: any) {
+      } catch (err) {
         setError(err.message || 'Failed to load file');
       } finally {
         setLoading(false);

@@ -1,24 +1,10 @@
 import React, { useState } from 'react';
 import { Folder, File, ChevronRight, ChevronDown } from 'lucide-react';
-import { FileNode } from '../types';
 import { cn } from '../lib/utils';
 
-interface FileTreeProps {
-  data: FileNode[];
-  selectedPath?: string;
-  onSelect: (path: string) => void;
-}
-
-interface TreeNode {
-  name: string;
-  path: string;
-  type: 'blob' | 'tree';
-  children: Map<string, TreeNode>;
-}
-
-export const FileTree: React.FC<FileTreeProps> = ({ data, selectedPath, onSelect }) => {
+export const FileTree = ({ data, selectedPath, onSelect }) => {
   const buildTree = () => {
-    const root: TreeNode = { name: '', path: '', type: 'tree', children: new Map() };
+    const root = { name: '', path: '', type: 'tree', children: new Map() };
     data.forEach(item => {
       const parts = item.path.split('/');
       let current = root;
@@ -31,7 +17,7 @@ export const FileTree: React.FC<FileTreeProps> = ({ data, selectedPath, onSelect
             children: new Map()
           });
         }
-        current = current.children.get(part)!;
+        current = current.children.get(part);
       });
     });
     return root;
@@ -55,12 +41,7 @@ export const FileTree: React.FC<FileTreeProps> = ({ data, selectedPath, onSelect
   );
 };
 
-const TreeItem: React.FC<{
-  node: TreeNode;
-  selectedPath?: string;
-  onSelect: (path: string) => void;
-  depth: number;
-}> = ({ node, selectedPath, onSelect, depth }) => {
+const TreeItem = ({ node, selectedPath, onSelect, depth }) => {
   const [isOpen, setIsOpen] = useState(depth < 1);
   const isSelected = selectedPath === node.path;
   const isBranch = node.type === 'tree';

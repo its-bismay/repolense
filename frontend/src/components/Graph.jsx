@@ -1,28 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { FileNode } from '../types';
-
-interface GraphProps {
-  data: FileNode[];
-  selectedPath?: string;
-  onNodeClick: (path: string) => void;
-}
-
-interface Node extends d3.SimulationNodeDatum {
-  id: string;
-  type: 'blob' | 'tree';
-  name: string;
-  depth: number;
-}
-
-interface Link extends d3.SimulationLinkDatum<Node> {
-  source: string;
-  target: string;
-}
-
-export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
+export const Graph = ({ data, selectedPath, onNodeClick }) => {
+  const containerRef = useRef(null);
+  const svgRef = useRef(null);
 
   useEffect(() => {
     if (!containerRef.current || !svgRef.current || data.length === 0) return;
@@ -36,7 +16,7 @@ export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick })
     const g = svg.append('g');
 
     // Zoom behavior
-    const zoom = d3.zoom<SVGSVGElement, unknown>()
+    const zoom = d3.zoom()
       .scaleExtent([0.1, 4])
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
@@ -45,12 +25,12 @@ export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick })
     svg.call(zoom);
 
     // Prepare data
-    const nodes: Node[] = [];
-    const links: Link[] = [];
-    const nodeMap = new Map<string, Node>();
+    const nodes = [];
+    const links = [];
+    const nodeMap = new Map();
 
     // Root node
-    const rootNode: Node = { id: 'root', type: 'tree', name: 'root', depth: 0 };
+    const rootNode = { id: 'root', type: 'tree', name: 'root', depth: 0 };
     nodes.push(rootNode);
     nodeMap.set('', rootNode);
 
@@ -59,7 +39,7 @@ export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick })
       const name = parts[parts.length - 1];
       const parentPath = parts.slice(0, -1).join('/');
       
-      const node: Node = {
+      const node = {
         id: item.path,
         type: item.type,
         name,
@@ -71,8 +51,8 @@ export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick })
       links.push({ source: parentPath || 'root', target: item.path });
     });
 
-    const simulation = d3.forceSimulation<Node>(nodes)
-      .force('link', d3.forceLink<Node, Link>(links).id(d => d.id).distance(50).strength(1))
+    const simulation = d3.forceSimulation(nodes)
+      .force('link', d3.forceLink(links).id(d => d.id).distance(50).strength(1))
       .force('charge', d3.forceManyBody().strength(-150))
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collision', d3.forceCollide().radius(20));
@@ -89,7 +69,7 @@ export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick })
       .join('g')
       .attr('cursor', 'pointer')
       .on('click', (event, d) => onNodeClick(d.id === 'root' ? '' : d.id))
-      .call(d3.drag<SVGGElement, Node>()
+      .call(d3.drag()
         .on('start', (event) => {
           if (!event.active) simulation.alphaTarget(0.3).restart();
           event.subject.fx = event.subject.x;
@@ -103,7 +83,7 @@ export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick })
           if (!event.active) simulation.alphaTarget(0);
           event.subject.fx = null;
           event.subject.fy = null;
-        }) as any);
+        }) );
 
     node.append('circle')
       .attr('r', d => d.type === 'tree' ? 6 : 4)
@@ -126,10 +106,10 @@ export const Graph: React.FC<GraphProps> = ({ data, selectedPath, onNodeClick })
 
     simulation.on('tick', () => {
       link
-        .attr('x1', d => (d.source as any).x)
-        .attr('y1', d => (d.source as any).y)
-        .attr('x2', d => (d.target as any).x)
-        .attr('y2', d => (d.target as any).y);
+        .attr('x1', d => d.source.x)
+        .attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x)
+        .attr('y2', d => d.target.y);
 
       node
         .attr('transform', d => `translate(${d.x},${d.y})`);
