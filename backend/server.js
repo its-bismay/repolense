@@ -10,7 +10,7 @@ const PORT = 5000;
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 app.get("/api/repo/structure", async (req, res) => {
