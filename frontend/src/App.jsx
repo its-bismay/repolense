@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BrokenHeader from './components/BrokenHeader';
 import { githubService } from './services/githubService';
 import { aiService } from './services/aiService';
 import { Graph } from './components/Graph';
