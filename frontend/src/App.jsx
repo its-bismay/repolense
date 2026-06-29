@@ -7,7 +7,6 @@ import { AnalysisBoard } from './components/AnalysisBoard';
 import { FileDetail } from './components/FileDetail';
 import { Search, Github, Star, GitFork, Calendar, Shield, Loader2, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import Bottombar from "./components/Bottombar.jsx"
 
 export default function App() {
   const [url, setUrl] = useState('');
@@ -22,7 +21,7 @@ export default function App() {
     e.preventDefault();
     if (!url) return;
     
-    setLoading(true);
+    setLoading(;
     setError(null);
     setData(null);
     setAnalysis(null);
@@ -45,7 +44,7 @@ export default function App() {
   if (!data) {
     return (
       <div className="min-h-screen flex flex-col bg-ink text-white selection:bg-accent selection:text-black relative">
-        <div className="grid-background" />
+        <div className="grid-background" >
         
         <header className="h-16 border-b border-white/10 flex items-center px-8 relative z-10">
           <div className="flex items-center gap-3">
