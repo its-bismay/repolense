@@ -1,0 +1,24 @@
+# .github/workflows/healer.yml
+name: HealerAI Continuous Recovery
+
+on:
+  workflow_run:
+    workflows: ["CI"]   # Replace with your CI workflow name
+    types: [completed]
+
+jobs:
+  auto-heal:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Notify HealerAI
+        run: |
+          curl -X POST "https://healer-ai-pipeline-tals.vercel.app/api/v1/webhook/github-failure" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.HEALER_REPO_TOKEN }}" \
+            -d '{
+              "repo": "${{ github.repository }}",
+              "run_id": "${{ github.event.workflow_run.id }}",
+              "branch": "${{ github.event.workflow_run.head_branch }}",
+              "commit": "${{ github.event.workflow_run.head_sha }}"
+            }'
