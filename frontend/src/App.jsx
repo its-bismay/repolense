@@ -256,7 +256,7 @@ export default function App() {
               </button>
             </motion.aside>
           )}
-        </AnimatePresence>
+        <AnimatePresence>
       </div>
 
       <footer className="h-10 border-t border-white/5 px-6 flex items-center justify-between text-[9px] font-mono text-white/20 bg-ink z-20">
