@@ -269,7 +269,7 @@ export default function App() {
           <span className="opacity-40">REP-LEN-PRO-2.4</span>
         </div>
       </footer>
-    </div>
+    </div
   );
 }
 
