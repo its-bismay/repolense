@@ -7,6 +7,7 @@ import { AnalysisBoard } from './components/AnalysisBoard';
 import { FileDetail } from './components/FileDetail';
 import { Search, Github, Star, GitFork, Calendar, Shield, Loader2, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import Bottombar from "./components/Bottombar.jsx"
 
 export default function App() {
   const [url, setUrl] = useState('');
